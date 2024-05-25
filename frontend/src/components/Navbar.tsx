@@ -3,6 +3,7 @@ import { UserCredential } from "firebase/auth";
 import { AlignJustify } from "lucide-react";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
+import * as apiClient from "../api-client";
 import { AuthContext, AuthContextType } from "../providers/AuthProvider";
 
 const Navbar = () => {
@@ -35,14 +36,23 @@ const Navbar = () => {
 
   const handleSignIn = async () => {
     await signInWithGoogle()
-      .then((result: UserCredential) => {
-        const { displayName, email, photoURL } = result.user;
+      .then(async (result: UserCredential) => {
+        const { displayName, email, photoURL } = result.user || {};
+
         const userData = {
-          displayName,
-          email,
-          photoURL,
+          displayName: displayName || "",
+          email: email || "",
+          photoURL: photoURL || "",
+          coins: 0,
         };
-        console.log(user);
+
+        // will get the token form backend
+        const data = await apiClient.createNewUser(userData);
+
+        // storing the token in the localStorage
+        if (data.token) {
+          localStorage.setItem("token", data.token);
+        }
       })
       .catch((err: FirebaseError) => console.log(err));
   };

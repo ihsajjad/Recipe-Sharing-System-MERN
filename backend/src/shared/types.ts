@@ -3,5 +3,5 @@ export type UserDataType = {
   displayName: string;
   email: string;
   photoURL: string;
-  coins: number;
+  coins?: number;
 };
