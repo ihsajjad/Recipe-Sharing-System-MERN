@@ -1,4 +1,9 @@
-import { RecipeDataType, UserDataType } from "../../backend/src/shared/types";
+import {
+  RecipeCardType,
+  RecipeDataType,
+  SearchQuery,
+  UserDataType,
+} from "../../backend/src/shared/types";
 
 const API_BASE_URL =
   import.meta.env.MODE === "production" ? "" : "http://localhost:3000";
@@ -42,6 +47,22 @@ export const createNewRecipe = async (
   });
 
   if (!response.ok) throw new Error("Something went wrong");
+
+  return response.json();
+};
+
+// get all recipes
+export const getAllRecipes = async (
+  queryParams: SearchQuery
+): Promise<{ recipes: RecipeCardType[]; total: number }> => {
+  const params = new URLSearchParams();
+  params.append("searchText", queryParams.searchText);
+  params.append("country", queryParams.country);
+  params.append("category", queryParams.category);
+
+  const response = await fetch(`${API_BASE_URL}/api/recipes?${params}`);
+
+  if (!response.ok) throw new Error("Something went wrong!");
 
   return response.json();
 };

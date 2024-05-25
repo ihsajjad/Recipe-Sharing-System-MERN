@@ -20,3 +20,18 @@ export type RecipeDataType = {
   country: string;
   category: string;
 };
+
+export type RecipeCardType = {
+  _id?: string;
+  creatorEmail?: string;
+  purchased_by?: string[];
+  recipeName: string;
+  recipeImage: string;
+  country: string;
+};
+
+export type SearchQuery = {
+  searchText: string;
+  country: string;
+  category: string;
+};
