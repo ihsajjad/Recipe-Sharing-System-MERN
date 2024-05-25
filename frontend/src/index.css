@@ -1,3 +1,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  /* FF8C00 */
+  --primary-color: #ff6347;
+  /* --primary-color: #008080; */
+  --secondary-color: #008080;
+  /* FFFACD */
+  --primary-bg: #faebd7;
+  --secondary-bg: #f8f8ff;
+}
+
+@layer utilities {
+  .max-container {
+    @apply px-2 md:px-5 lg:px-20;
+  }
+}
