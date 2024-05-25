@@ -1,45 +1,117 @@
+import { ChangeEvent } from "react";
+import { useForm } from "react-hook-form";
 import { countries, recipeCategories } from "../config/recipes.config";
 
+type RecipeDataType = {
+  recipeName: string;
+  recipeImage: string;
+  recipeDetails: string;
+  youtubeVideo: string;
+  country: string;
+  category: string;
+};
+
 const AddRecipes = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    setError,
+  } = useForm<RecipeDataType>();
+
+  // uploading the image to the imgBB
+  const handleUploadImage = async (e: ChangeEvent<HTMLInputElement>) => {
+    const { files } = e.target;
+    if (files && files[0]) {
+      const data = new FormData();
+      data.append("image", files[0]);
+
+      const response = await fetch(
+        "https://api.imgbb.com/1/upload?key=299f98495334969de108ff70df2ea284",
+        {
+          method: "POST",
+          body: data,
+        }
+      );
+      const result = await response.json();
+      if (result.data.url) setValue("recipeImage", result.data.url);
+    }
+  };
+
+  const onSubmit = handleSubmit((data) => {
+    console.log(data);
+    if (!data.recipeImage) {
+      return setError("recipeImage", { message: "This field is required" });
+    }
+  });
+
   return (
     <div className="max-container">
       <h1 className="text-3xl font-bold text-center my-6 text-[var(--primary-color)] border-b-2 border-dashed border-[var(--primary-color)] pb-3">
         Add Recipes
       </h1>
       <div>
-        <form className="">
+        <form onSubmit={onSubmit} className="">
           <div className="grid grid-cols-4 gap-5">
             <label className="col-span-2">
               Recipe Name:
               <input
                 type="text"
+                {...register("recipeName", { required: true })}
                 placeholder="Recipe Name"
                 className="input input-bordered w-full"
               />
+              {errors?.recipeName && (
+                <span className="text-sm text-red-500">
+                  This field is required
+                </span>
+              )}
             </label>
             <label className="col-span-2 ">
               Recipe Image:
-              <input type="file" className="input input-bordered p-2 w-full" />
+              <input
+                type="file"
+                onChange={handleUploadImage}
+                className="input input-bordered p-2 w-full"
+              />
+              {errors?.recipeImage && (
+                <span className="text-sm text-red-500">
+                  This field is required
+                </span>
+              )}
             </label>
             <label className="col-span-2">
               Recipe Details:
               <textarea
+                {...register("recipeDetails", { required: true })}
                 className="textarea textarea-bordered w-full"
                 rows={3}
                 placeholder="Recipe Details..."
               ></textarea>
+              {errors?.recipeDetails && (
+                <span className="text-sm text-red-500">
+                  This field is required
+                </span>
+              )}
             </label>
             <label className="col-span-2">
               Embedded Youtube Video:
               <textarea
+                {...register("youtubeVideo", { required: true })}
                 className="textarea textarea-bordered w-full"
                 rows={3}
                 placeholder="Embedded youtube video code"
               ></textarea>
+              {errors?.youtubeVideo && (
+                <span className="text-sm text-red-500">
+                  This field is required
+                </span>
+              )}
             </label>
             <label className="col-span-2">
               <select
-                //   {...register("country", { required: true })}
+                {...register("country", { required: true })}
                 className="select select-bordered w-full"
               >
                 <option value="" disabled selected>
@@ -51,10 +123,15 @@ const AddRecipes = () => {
                   </option>
                 ))}
               </select>
+              {errors?.country && (
+                <span className="text-sm text-red-500">
+                  This field is required
+                </span>
+              )}
             </label>
             <label className="col-span-2">
               <select
-                //   {...register("country", { required: true })}
+                {...register("category", { required: true })}
                 className="select select-bordered w-full"
               >
                 <option value="" disabled selected>
@@ -66,6 +143,11 @@ const AddRecipes = () => {
                   </option>
                 ))}
               </select>
+              {errors?.category && (
+                <span className="text-sm text-red-500">
+                  This field is required
+                </span>
+              )}
             </label>
           </div>
           <div className="flex items-center justify-center">
