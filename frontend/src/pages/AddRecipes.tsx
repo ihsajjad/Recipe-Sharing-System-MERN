@@ -1,15 +1,7 @@
 import { ChangeEvent } from "react";
 import { useForm } from "react-hook-form";
+import { RecipeDataType } from "../../../backend/src/shared/types";
 import { countries, recipeCategories } from "../config/recipes.config";
-
-type RecipeDataType = {
-  recipeName: string;
-  recipeImage: string;
-  recipeDetails: string;
-  youtubeVideo: string;
-  country: string;
-  category: string;
-};
 
 const AddRecipes = () => {
   const {
@@ -40,7 +32,6 @@ const AddRecipes = () => {
   };
 
   const onSubmit = handleSubmit((data) => {
-    console.log(data);
     if (!data.recipeImage) {
       return setError("recipeImage", { message: "This field is required" });
     }
@@ -53,8 +44,8 @@ const AddRecipes = () => {
       </h1>
       <div>
         <form onSubmit={onSubmit} className="">
-          <div className="grid grid-cols-4 gap-5">
-            <label className="col-span-2">
+          <div className="grid grid-cols-1 sm:grid-cols-4 gap-2 sm:gap-5">
+            <label className=" sm:col-span-2">
               Recipe Name:
               <input
                 type="text"
@@ -68,7 +59,7 @@ const AddRecipes = () => {
                 </span>
               )}
             </label>
-            <label className="col-span-2 ">
+            <label className=" sm:col-span-2 ">
               Recipe Image:
               <input
                 type="file"
@@ -81,7 +72,7 @@ const AddRecipes = () => {
                 </span>
               )}
             </label>
-            <label className="col-span-2">
+            <label className=" sm:col-span-2">
               Recipe Details:
               <textarea
                 {...register("recipeDetails", { required: true })}
@@ -95,7 +86,7 @@ const AddRecipes = () => {
                 </span>
               )}
             </label>
-            <label className="col-span-2">
+            <label className=" sm:col-span-2">
               Embedded Youtube Video:
               <textarea
                 {...register("youtubeVideo", { required: true })}
@@ -109,7 +100,7 @@ const AddRecipes = () => {
                 </span>
               )}
             </label>
-            <label className="col-span-2">
+            <label className=" sm:col-span-2">
               <select
                 {...register("country", { required: true })}
                 className="select select-bordered w-full"
@@ -129,7 +120,7 @@ const AddRecipes = () => {
                 </span>
               )}
             </label>
-            <label className="col-span-2">
+            <label className=" sm:col-span-2">
               <select
                 {...register("category", { required: true })}
                 className="select select-bordered w-full"
