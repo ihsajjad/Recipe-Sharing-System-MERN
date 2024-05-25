@@ -54,7 +54,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="navbar bg-[var(--primary-color)] max-container ">
+    <nav className="navbar bg-[var(--primary-color)] max-container">
       <div className="navbar-start">
         <div className="dropdown">
           <div tabIndex={0} role="button" className="mr-2 md:hidden">

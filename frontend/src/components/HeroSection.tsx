@@ -1,8 +1,43 @@
+import { FirebaseError } from "firebase/app";
+import { UserCredential } from "firebase/auth";
 import { ArrowRight } from "lucide-react";
-import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import * as apiClient from "../api-client";
+import { AuthContext, AuthContextType } from "../providers/AuthProvider";
 import bgVideo from "/bg-video.mp4";
 
 const HeroSection = () => {
+  const { signInWithGoogle, user } = useContext(AuthContext) as AuthContextType;
+  const navigate = useNavigate();
+
+  const handleRedirect = async () => {
+    if (!user) {
+      await signInWithGoogle()
+        .then(async (result: UserCredential) => {
+          const { displayName, email, photoURL } = result.user || {};
+
+          const userData = {
+            displayName: displayName || "",
+            email: email || "",
+            photoURL: photoURL || "",
+          };
+
+          // will get the token form backend
+          const data = await apiClient.userLogin(userData);
+
+          // storing the token in the localStorage
+          if (data.token) {
+            localStorage.setItem("token", data.token);
+            navigate("/add-recipes", { replace: true });
+          }
+        })
+        .catch((err: FirebaseError) => console.log(err));
+    } else {
+      navigate("/add-recipes", { replace: true });
+    }
+  };
+
   return (
     <header
       className={`bg-[url(${bgVideo})] h-[calc(100vh-64px)] w-full border relative`}
@@ -18,7 +53,6 @@ const HeroSection = () => {
       </video>
 
       {/* header content */}
-
       <div className="bg-black/20 w-full h-full absolute z-10 inset-0 flex items-center justify-center">
         <div className="w-5/6 md:w-2/3 text-center space-y-5">
           <h1 className="text-3xl md:text-5xl font-bold text-white text-center">
@@ -31,12 +65,12 @@ const HeroSection = () => {
             unique recipes.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
-            <Link
-              to="/add-recipes"
-              className="border-[2px] border-white text-white px-4 py-2 font-bold text-xl rounded-full bg-[var(--primary-color)] duration-300 shadow-xl hover:shadow-[#ff634794] opacity-90 hover:opacity-100"
+            <button
+              onClick={handleRedirect}
+              className="border-[2px] border-white/80 text-white px-4 py-2 font-bold text-xl rounded-full bg-[var(--primary-color)] duration-300 shadow-xl hover:shadow-[#ff634794] opacity-90 hover:opacity-100"
             >
               Share Your Recipe
-            </Link>
+            </button>
             <Link
               to="/recipes"
               className="hover:bg-slate-700 border-[2px] text-white/90 px-4 py-2 font-bold text-xl rounded-full hover:opacity-100 border-white duration-300 flex gap-2 items-center"
