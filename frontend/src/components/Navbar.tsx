@@ -1,8 +1,15 @@
+import { FirebaseError } from "firebase/app";
+import { UserCredential } from "firebase/auth";
 import { AlignJustify } from "lucide-react";
+import { useContext } from "react";
 import { Link } from "react-router-dom";
+import { AuthContext, AuthContextType } from "../providers/AuthProvider";
 
 const Navbar = () => {
-  const user = {};
+  const { signInWithGoogle, user, setUser } = useContext(
+    AuthContext
+  ) as AuthContextType;
+
   const navLinks = (
     <>
       <li>
@@ -25,6 +32,20 @@ const Navbar = () => {
       ) : null}
     </>
   );
+
+  const handleSignIn = async () => {
+    await signInWithGoogle()
+      .then((result: UserCredential) => {
+        const { displayName, email, photoURL } = result.user;
+        const userData = {
+          displayName,
+          email,
+          photoURL,
+        };
+        console.log(user);
+      })
+      .catch((err: FirebaseError) => console.log(err));
+  };
 
   return (
     <div className="navbar bg-[var(--primary-color)] max-container ">
@@ -51,7 +72,7 @@ const Navbar = () => {
         {user ? (
           <>
             <div className="px-2 py-0.5 rounded-full bg-white text-sm">
-              Coins: {user?.coin ? user?.coin : 0}
+              Coins: {user?.coins ? user?.coins : 0}
             </div>
             <img
               alt="Tailwind CSS Navbar component"
@@ -68,7 +89,10 @@ const Navbar = () => {
           </>
         ) : (
           <>
-            <button className="cursor-pointer font-semibold text-slate-700">
+            <button
+              onClick={handleSignIn}
+              className="cursor-pointer font-semibold text-slate-700"
+            >
               Login
             </button>
           </>
