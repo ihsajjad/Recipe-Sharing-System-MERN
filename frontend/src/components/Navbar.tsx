@@ -5,11 +5,10 @@ import { useContext } from "react";
 import { Link } from "react-router-dom";
 import * as apiClient from "../api-client";
 import { AuthContext, AuthContextType } from "../providers/AuthProvider";
+import LogOutBtn from "./LogOutBtn";
 
 const Navbar = () => {
-  const { signInWithGoogle, user, setUser } = useContext(
-    AuthContext
-  ) as AuthContextType;
+  const { signInWithGoogle, user } = useContext(AuthContext) as AuthContextType;
 
   const navLinks = (
     <>
@@ -25,9 +24,7 @@ const Navbar = () => {
             <Link to="/add-recipes">Add Recipes</Link>
           </li>
           <li className="md:hidden">
-            <button className="cursor-pointer bg-slate-100 px-2 py-0.5 md:py-1 rounded-full text-sm text-slate-700 font-semibold border border-slate-700 w-fit my-1 ml-2">
-              Logout
-            </button>
+            <LogOutBtn />
           </li>
         </>
       ) : null}
@@ -43,11 +40,10 @@ const Navbar = () => {
           displayName: displayName || "",
           email: email || "",
           photoURL: photoURL || "",
-          coins: 0,
         };
 
         // will get the token form backend
-        const data = await apiClient.createNewUser(userData);
+        const data = await apiClient.userLogin(userData);
 
         // storing the token in the localStorage
         if (data.token) {
@@ -85,7 +81,7 @@ const Navbar = () => {
               Coins: {user?.coins ? user?.coins : 0}
             </div>
             <img
-              alt="Tailwind CSS Navbar component"
+              alt={user.displayName}
               src={
                 user?.photoURL
                   ? user?.photoURL
@@ -93,9 +89,7 @@ const Navbar = () => {
               }
               className="w-10 h-10 rounded-full overflow-hidden"
             />
-            <button className="cursor-pointer bg-slate-100 px-2 py-1 rounded-full text-sm text-slate-700 font-semibold border border-slate-700 hidden lg:block">
-              Logout
-            </button>
+            <LogOutBtn />
           </>
         ) : (
           <>

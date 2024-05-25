@@ -1,12 +1,28 @@
 import express, { Request, Response } from "express";
 import jwt from "jsonwebtoken";
+import { verifyToken } from "../middleware/varifyToken";
 import User from "../models/User.model";
 
 const router = express.Router();
 
-// create new user
+// getting current user data
+router.get(
+  "/current-user",
+  verifyToken,
+  async (req: Request, res: Response) => {
+    try {
+      const userData = await User.findOne({ email: req.email });
+
+      res.json(userData);
+    } catch (error) {
+      console.log(__filename, error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  }
+);
+
+// user login
 router.post("/", async (req: Request, res: Response) => {
-  console.log("Hitted");
   try {
     // checking the user already exists or not
     const isUser = await User.findOne({ email: req.body.email });
@@ -18,7 +34,7 @@ router.post("/", async (req: Request, res: Response) => {
 
     // create JWT token
     const token = jwt.sign(
-      { emial: req.body.email },
+      { email: req.body.email },
       process.env.JWT_SECRET_KEY as string,
       {
         expiresIn: "1d",
