@@ -2,6 +2,7 @@ import cors from "cors";
 import "dotenv/config";
 import express from "express";
 import mongoose from "mongoose";
+import recipeRoutes from "./routes/recipes.routes";
 import userRoutes from "./routes/user.routes";
 
 const port = process.env.PORT || 3000;
@@ -18,6 +19,7 @@ app.use(cors());
 
 // routes
 app.use("/api/users", userRoutes);
+app.use("/api/recipes", recipeRoutes);
 
 // default route
 app.get("/", (_, res) => {
