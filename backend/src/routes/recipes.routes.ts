@@ -36,6 +36,19 @@ router.get("/", async (req: Request, res: Response) => {
   }
 });
 
+// get single recipe by _id
+router.get("/:recipeId", async (req: Request, res: Response) => {
+  try {
+    const recipe = await Recipe.findById(req.params.recipeId)
+    if (!recipe) return res.status(404).json({ message: "Recipe doesn't exist!" })
+    
+    res.json(recipe)
+  } catch (error) {
+    console.log(__filename, error);
+    res.status(500).json({message: "Internal server error"})
+  }
+})
+
 // add new recipe
 router.post("/", verifyToken, async (req: Request, res: Response) => {
   try {
