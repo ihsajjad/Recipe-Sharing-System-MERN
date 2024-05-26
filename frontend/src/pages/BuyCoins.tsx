@@ -1,6 +1,23 @@
+import { useNavigate } from "react-router-dom";
+import * as apiClient from "../api-client";
 import { cardsData } from "../config/recipes.config";
 
 const BuyCoins = () => {
+  const navigate = useNavigate();
+
+  const handleBuyCoins = async (amount: number) => {
+    const token = localStorage.getItem("token");
+
+    // creating a stripe payment intent in the DB it will return client secret
+    const paymentIntent = await apiClient.createPaymentIntent(
+      amount,
+      token as string
+    );
+
+    if (paymentIntent) {
+      navigate("/confirm-payment", { state: paymentIntent });
+    }
+  };
   return (
     <div className="max-container py-6 min-h-[calc(100vh-64px)]">
       <h1 className="page-title">Purchase Coins</h1>
@@ -20,7 +37,12 @@ const BuyCoins = () => {
               /<span className="text-xl font-semibold">{card.coins}</span>
             </div>
             <p>{card.description}</p>
-            <button className="buy-btn">Buy For ${card.price}</button>
+            <button
+              onClick={() => handleBuyCoins(card.price)}
+              className="buy-btn"
+            >
+              Buy For ${card.price}
+            </button>
           </div>
         ))}
       </div>

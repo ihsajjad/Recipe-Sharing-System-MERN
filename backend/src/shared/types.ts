@@ -35,3 +35,8 @@ export type SearchQuery = {
   country: string;
   category: string;
 };
+
+export type PaymentIntentType = {
+  clientSecret: string;
+  amount: number;
+};

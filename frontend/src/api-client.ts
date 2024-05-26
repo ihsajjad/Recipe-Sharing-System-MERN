@@ -1,9 +1,15 @@
+import { loadStripe } from "@stripe/stripe-js";
 import {
   RecipeCardType,
   RecipeDataType,
   SearchQuery,
   UserDataType,
 } from "../../backend/src/shared/types";
+
+// load stripe promise
+export const stripePromise = loadStripe(
+  import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY as string
+);
 
 export const API_BASE_URL =
   import.meta.env.MODE === "production" ? "" : "http://localhost:3000";
@@ -74,6 +80,25 @@ export const getAllRecipes = async (
   const response = await fetch(`${API_BASE_URL}/api/recipes?${params}`);
 
   if (!response.ok) throw new Error("Something went wrong!");
+
+  return response.json();
+};
+
+// create payment intent
+export const createPaymentIntent = async (amount: number, token: string) => {
+  const response = await fetch(
+    `${API_BASE_URL}/api/users/create-payment-intent`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `bearer ${token}`,
+      },
+      body: JSON.stringify({ amount }),
+    }
+  );
+
+  if (!response.ok) throw new Error("Something went wrong");
 
   return response.json();
 };
