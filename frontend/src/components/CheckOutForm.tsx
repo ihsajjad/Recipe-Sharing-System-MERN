@@ -39,7 +39,7 @@ const CheckOutForm = ({
       elements,
       clientSecret: paymentIntent.clientSecret,
       confirmParams: {
-        return_url: import.meta.env.VITE_FRONTEND_URL,
+        return_url: import.meta.env.VITE_FRONTEND_URL + "/all-recipes",
       },
     });
 

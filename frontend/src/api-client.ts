@@ -120,3 +120,19 @@ export const increaseCoins = async (paidAmount: number) => {
 
   return response.json();
 };
+
+// buy recipe
+export const buyRecipe = async (recipeId: string, creatorEmail: string) => {
+  const response = await fetch(`${API_BASE_URL}/api/recipes/buy-recipe`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: `bearer ${token}`,
+    },
+    body: JSON.stringify({ recipeId, creatorEmail }),
+  });
+
+  if (!response.ok) throw new Error("Something went wrong");
+
+  return response.ok;
+};

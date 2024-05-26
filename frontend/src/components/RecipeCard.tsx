@@ -1,11 +1,14 @@
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { RecipeCardType } from "../../../backend/src/shared/types";
+import * as apiClient from "../api-client";
 import { askingForPermission } from "../lib/utils";
 import { AuthContext, AuthContextType } from "../providers/AuthProvider";
 
 const RecipeCard = ({ recipe }: { recipe: RecipeCardType }) => {
-  const { signInWithGoogle, user } = useContext(AuthContext) as AuthContextType;
+  const { signInWithGoogle, user, setRefetchUser } = useContext(
+    AuthContext
+  ) as AuthContextType;
 
   const navigate = useNavigate();
 
@@ -18,7 +21,7 @@ const RecipeCard = ({ recipe }: { recipe: RecipeCardType }) => {
         "Yes, Login"
       ).then((result: { isConfirmed: boolean }) => {
         if (result.isConfirmed) {
-          signInWithGoogle(`/all-recipes/${_id}`);
+          signInWithGoogle(`/all-recipes`);
         }
       });
     }
@@ -34,7 +37,7 @@ const RecipeCard = ({ recipe }: { recipe: RecipeCardType }) => {
     }
 
     // if the user has less than 10 coins
-    if (user?.coins && user?.coins < 10) {
+    if (typeof user.coins === "number" && user?.coins < 10) {
       return askingForPermission(
         "You don't have enough coins",
         "Do you want to by coins?",
@@ -47,15 +50,21 @@ const RecipeCard = ({ recipe }: { recipe: RecipeCardType }) => {
     }
 
     // if the user has enough coins
-    if (user?.coins && user?.coins > 10) {
+    if (user?.coins && user?.coins >= 10) {
       return askingForPermission(
         "You will be charged 10 coins.",
         "Do you want to visit the recipe?",
         "Yes, I want"
-      ).then((result: { isConfirmed: boolean }) => {
+      ).then(async (result: { isConfirmed: boolean }) => {
         if (result.isConfirmed) {
-          // todo: cut 10 coins from the user
-          navigate(`/all-recipes/${_id}`);
+          const data = await apiClient.buyRecipe(
+            _id,
+            recipe.creatorEmail as string
+          );
+          if (data) {
+            setRefetchUser((p) => !p);
+            navigate(`/all-recipes/${_id}`);
+          }
         }
       });
     }
