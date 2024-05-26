@@ -2,6 +2,7 @@ import cors from "cors";
 import "dotenv/config";
 import express from "express";
 import mongoose from "mongoose";
+import path from "path";
 import recipeRoutes from "./routes/recipes.routes";
 import userRoutes from "./routes/user.routes";
 
@@ -16,6 +17,9 @@ mongoose
 // middleware
 app.use(express.json());
 app.use(cors());
+
+// Starting the client
+app.use(express.static(path.join(__dirname, "../../frontend/dist")));
 
 // routes
 app.use("/api/users", userRoutes);
