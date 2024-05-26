@@ -1,3 +1,27 @@
+export const cardsData = [
+  {
+    id: 1,
+    title: "Buy 100 Coins",
+    description: "Buy 100 coins for just $1",
+    price: 1,
+    coins: 100,
+  },
+  {
+    id: 2,
+    title: "Buy 500 Coins",
+    description: "Buy 500 coins for just $5",
+    price: 5,
+    coins: 500,
+  },
+  {
+    id: 3,
+    title: "Buy 1000 Coins",
+    description: "Buy 1000 coins for just $10",
+    price: 10,
+    coins: 1000,
+  },
+];
+
 export const recipeCategories = [
   "Appetizers & Snacks",
   "Main Courses",

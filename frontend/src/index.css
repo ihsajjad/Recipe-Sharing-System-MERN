@@ -16,4 +16,13 @@
   .max-container {
     @apply px-4 md:px-5 lg:px-20;
   }
+  .page-title {
+    @apply text-center text-3xl font-bold mb-4 text-[var(--primary-color)] border-b-2 border-dashed pb-2 border-[var(--primary-color)];
+  }
+  .price-card {
+    @apply w-[250px] pb-12 bg-[var(--secondary-bg)] rounded-lg p-4 shadow-lg shadow-[#00000039] text-center flex flex-col gap-y-4 border-[var(--secondary-color)] border duration-300 hover:border-[var(--primary-color)];
+  }
+  .buy-btn {
+    @apply bg-[var(--secondary-color)] text-white w-28 py-2 rounded-full font-bold -mb-16 mx-auto shadow-xl group-hover:shadow-[#00000047] duration-300 group-hover:bg-[var(--primary-color)];
+  }
 }

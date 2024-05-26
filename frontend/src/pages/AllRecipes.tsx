@@ -21,11 +21,9 @@ const AllRecipes = () => {
   }, [searchQuery]);
 
   return (
-    <div>
-      <h1 className="text-3xl font-bold text-center text-[var(--primary-color)] my-4">
-        All Recipes
-      </h1>
-      <div className="max-container grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-8 mb-16 justify-items-center sm:justify-items-stretch">
+    <div className="max-container py-6">
+      <h1 className="page-title">All Recipes</h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-8 mb-16 justify-items-center sm:justify-items-stretch">
         {recipes.map((recipe) => (
           <RecipeCard recipe={recipe} key={recipe._id} />
         ))}

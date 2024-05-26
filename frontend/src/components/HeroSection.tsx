@@ -1,9 +1,6 @@
-import { FirebaseError } from "firebase/app";
-import { UserCredential } from "firebase/auth";
 import { ArrowRight } from "lucide-react";
 import { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import * as apiClient from "../api-client";
 import { AuthContext, AuthContextType } from "../providers/AuthProvider";
 import bgVideo from "/bg-video.mp4";
 
@@ -13,35 +10,14 @@ const HeroSection = () => {
 
   const handleRedirect = async () => {
     if (!user) {
-      await signInWithGoogle()
-        .then(async (result: UserCredential) => {
-          const { displayName, email, photoURL } = result.user || {};
-
-          const userData = {
-            displayName: displayName || "",
-            email: email || "",
-            photoURL: photoURL || "",
-          };
-
-          // will get the token form backend
-          const data = await apiClient.userLogin(userData);
-
-          // storing the token in the localStorage
-          if (data.token) {
-            localStorage.setItem("token", data.token);
-            navigate("/add-recipes", { replace: true });
-          }
-        })
-        .catch((err: FirebaseError) => console.log(err));
+      signInWithGoogle("/add-recipes");
     } else {
       navigate("/add-recipes", { replace: true });
     }
   };
 
   return (
-    <header
-      className={`bg-[url(${bgVideo})] h-[calc(100vh-64px)] w-full border relative`}
-    >
+    <header className={`h-[calc(100vh-64px)] w-full border relative`}>
       {/* background video */}
       <video
         autoPlay
@@ -53,7 +29,7 @@ const HeroSection = () => {
       </video>
 
       {/* header content */}
-      <div className="bg-black/20 w-full h-full absolute z-10 inset-0 flex items-center justify-center">
+      <div className="bg-black/20 w-full h-full absolute z-[1] inset-0 flex items-center justify-center">
         <div className="w-5/6 md:w-2/3 text-center space-y-5">
           <h1 className="text-3xl md:text-5xl font-bold text-white text-center">
             Discover, Cook, Share: Your Culinary Adventure Starts Here!
