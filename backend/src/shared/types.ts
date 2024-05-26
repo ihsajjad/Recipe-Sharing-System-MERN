@@ -4,6 +4,7 @@ export type UserDataType = {
   email: string;
   photoURL: string;
   coins?: number;
+  reactions?: string[];
 };
 
 export type RecipeDataType = {

@@ -136,3 +136,19 @@ export const buyRecipe = async (recipeId: string, creatorEmail: string) => {
 
   return response.ok;
 };
+
+// update reaction
+export const updateReactions = async (recipeId: string) => {
+  const response = await fetch(`${API_BASE_URL}/api/recipes/reaction`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: `bearer ${token}`,
+    },
+    body: JSON.stringify({ recipeId }),
+  });
+
+  if (!response.ok) throw new Error("Something went wrong");
+
+  return response.ok;
+};

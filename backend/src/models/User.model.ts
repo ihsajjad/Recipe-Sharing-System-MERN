@@ -6,6 +6,7 @@ const UserSchema = new mongoose.Schema<UserDataType>({
   photoURL: { type: String },
   email: { type: String, required: [true, "Email is required"], unique: true },
   coins: { type: Number, required: true, default: 50 },
+  reactions: [{ type: String }],
 });
 
 const User = mongoose.model("User", UserSchema);

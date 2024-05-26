@@ -23,7 +23,12 @@ router.get("/", async (req: Request, res: Response) => {
 
     const skip = (pageNumber - 1) * pageSize;
 
-    const recipes = await Recipe.find(query).skip(skip).limit(pageSize);
+    const recipes = await Recipe.find(query)
+      .skip(skip)
+      .limit(pageSize)
+      .select(
+        "_id recipeName recipeImage country category creatorEmail purchased_by"
+      );
 
     const response = {
       recipes,
@@ -84,6 +89,45 @@ router.put("/buy-recipe", verifyToken, async (req: Request, res: Response) => {
     );
 
     res.json({ message: "Recipe was bought successfully" });
+  } catch (error) {
+    console.log(__filename, error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+// reaction
+router.put("/reaction", verifyToken, async (req: Request, res: Response) => {
+  try {
+    const { recipeId } = req.body;
+
+    const user = await User.findOne({
+      email: req.email,
+      reactions: recipeId,
+    });
+
+    // if user already reacted delecting the reaction
+    if (user) {
+      await User.findOneAndUpdate(
+        {
+          email: req.email,
+        },
+        { $pull: { reactions: recipeId } }
+      );
+
+      await Recipe.findByIdAndUpdate(recipeId, { $inc: { reacts: -1 } });
+    } else {
+      // if user not reacted adding the reaction
+      await User.findOneAndUpdate(
+        {
+          email: req.email,
+        },
+        { $push: { reactions: recipeId } }
+      );
+
+      await Recipe.findByIdAndUpdate(recipeId, { $inc: { reacts: 1 } });
+    }
+
+    res.json({ message: "Reaction was updated" });
   } catch (error) {
     console.log(__filename, error);
     res.status(500).json({ message: "Internal server error" });

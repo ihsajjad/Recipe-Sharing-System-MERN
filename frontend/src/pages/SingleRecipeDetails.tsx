@@ -1,11 +1,13 @@
 import { ThumbsUp } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { RecipeDataType } from "../../../backend/src/shared/types";
 import * as apiClient from "../api-client";
 import EmbededVideo from "../components/EmbededVideo";
+import { AuthContext, AuthContextType } from "../providers/AuthProvider";
 
 const SingleRecipeDetails = () => {
+  const { user } = useContext(AuthContext) as AuthContextType;
   const [recipe, setRecipe] = useState<RecipeDataType>();
   const { recipeId } = useParams();
 
@@ -17,6 +19,11 @@ const SingleRecipeDetails = () => {
 
     recipeId && loadRecipe();
   }, [recipeId]);
+
+  const handleReaction = async (id: string) => {
+    const result = await apiClient.updateReactions(id);
+    console.log(result);
+  };
 
   return (
     <div className="bg-[var(--primary-bg)] pb-16 pt-3 md:pt-8">
@@ -32,8 +39,15 @@ const SingleRecipeDetails = () => {
         />
         <div className="flex items-center justify-between flex-wrap font-semibold">
           <span className="flex gap-1">
-            <button>
-              <ThumbsUp fill="var(--primary-color)" />
+            <button
+              onClick={() => handleReaction(recipe?._id as string)}
+              className="active:scale-125"
+            >
+              {user?.reactions?.includes(recipe?._id as string) ? (
+                <ThumbsUp fill="var(--primary-color)" />
+              ) : (
+                <ThumbsUp className="" />
+              )}
             </button>
             {recipe?.reacts}
           </span>
