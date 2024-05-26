@@ -14,7 +14,7 @@ export const stripePromise = loadStripe(
 export const API_BASE_URL =
   import.meta.env.MODE === "production" ? "" : "http://localhost:3000";
 
-const token = localStorage.getItem("token");
+export const token = localStorage.getItem("token");
 
 // getting current user data
 export const getCurrentUser = async (token: string): Promise<UserDataType> => {

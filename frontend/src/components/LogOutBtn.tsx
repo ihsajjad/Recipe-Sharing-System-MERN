@@ -1,4 +1,5 @@
 import { useContext } from "react";
+import { successToast } from "../lib/utils";
 import { AuthContext, AuthContextType } from "../providers/AuthProvider";
 
 const LogOutBtn = () => {
@@ -6,7 +7,7 @@ const LogOutBtn = () => {
 
   const handleLogout = () => {
     logOut().then(() => {
-      console.log("Logout Successfull");
+      successToast("Logout successfull");
       setUser(undefined);
     });
   };

@@ -6,6 +6,7 @@ import BuyCoins from "../pages/BuyCoins";
 import Home from "../pages/Home";
 import PaymentSummary from "../pages/PaymentSummary";
 import SingleRecipeDetails from "../pages/SingleRecipeDetails";
+import PrivateRoute from "./PrivateRoute";
 
 export const router = createBrowserRouter([
   {
@@ -13,11 +14,39 @@ export const router = createBrowserRouter([
     element: <Main />,
     children: [
       { path: "/", element: <Home /> },
-      { path: "/add-recipes", element: <AddRecipes /> },
+      {
+        path: "/add-recipes",
+        element: (
+          <PrivateRoute>
+            <AddRecipes />
+          </PrivateRoute>
+        ),
+      },
       { path: "/all-recipes", element: <AllRecipes /> },
-      { path: "/all-recipes/:recipeId", element: <SingleRecipeDetails /> },
-      { path: "/buy-coins", element: <BuyCoins /> },
-      { path: "/confirm-payment", element: <PaymentSummary /> },
+      {
+        path: "/all-recipes/:recipeId",
+        element: (
+          <PrivateRoute>
+            <SingleRecipeDetails />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/buy-coins",
+        element: (
+          <PrivateRoute>
+            <BuyCoins />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/confirm-payment",
+        element: (
+          <PrivateRoute>
+            <PaymentSummary />
+          </PrivateRoute>
+        ),
+      },
     ],
   },
 ]);

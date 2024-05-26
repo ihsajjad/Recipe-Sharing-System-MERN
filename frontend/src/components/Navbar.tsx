@@ -56,9 +56,12 @@ const Navbar = () => {
       <div className="navbar-end flex items-center gap-2">
         {user ? (
           <>
-            <div className="px-2 py-0.5 rounded-full bg-white text-sm">
+            <Link
+              to="/buy-coins"
+              className="px-2 py-0.5 rounded-full bg-white text-sm"
+            >
               Coins: {user?.coins ? user?.coins : 0}
-            </div>
+            </Link>
             <img
               alt={user.displayName}
               src={

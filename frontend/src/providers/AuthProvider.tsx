@@ -26,6 +26,7 @@ export type AuthContextType = {
   setUser: Dispatch<SetStateAction<UserDataType | undefined>>;
   logOut: () => Promise<void>;
   setRefetchUser: Dispatch<SetStateAction<boolean>>;
+  loading: boolean;
 };
 
 // import app and create auth
@@ -37,6 +38,7 @@ export const AuthContext = createContext<AuthContextType | null>(null);
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<UserDataType | undefined>(undefined);
   const [refetchUser, setRefetchUser] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   // const navigate = useNavigate();
 
   const googleProvider = new GoogleAuthProvider();
@@ -76,14 +78,17 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   // observing the current user
   useEffect(() => {
     const observe = onAuthStateChanged(auth, async (user) => {
+      setLoading(true);
       if (user) {
         const token = localStorage.getItem("token");
         if (token) {
           // getting the user's data form the database
           const userData = await apiClient.getCurrentUser(token);
           setUser(userData);
+          setLoading(false);
         }
       } else {
+        setLoading(false);
         setUser(undefined);
       }
     });
@@ -91,7 +96,14 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     return () => observe();
   }, [refetchUser]);
 
-  const authInfo = { user, signInWithGoogle, setUser, logOut, setRefetchUser };
+  const authInfo = {
+    user,
+    signInWithGoogle,
+    setUser,
+    logOut,
+    setRefetchUser,
+    loading,
+  };
   return (
     <AuthContext.Provider value={authInfo}>{children}</AuthContext.Provider>
   );

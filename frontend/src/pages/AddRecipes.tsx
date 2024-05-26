@@ -3,12 +3,14 @@ import { useForm } from "react-hook-form";
 import { RecipeDataType } from "../../../backend/src/shared/types";
 import * as apiClient from "../api-client";
 import { countries, recipeCategories } from "../config/recipes.config";
+import { successToast } from "../lib/utils";
 
 const AddRecipes = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
     setValue,
     setError,
   } = useForm<RecipeDataType>();
@@ -37,10 +39,12 @@ const AddRecipes = () => {
       return setError("recipeImage", { message: "This field is required" });
     }
 
-    const token = localStorage.getItem("token");
-    if (token) {
-      const result = await apiClient.createNewRecipe(data, token);
-      console.log(result);
+    if (apiClient.token) {
+      const result = await apiClient.createNewRecipe(data, apiClient.token);
+      if (result) {
+        successToast("Recipe is added successfully");
+        reset();
+      }
     }
   });
 
