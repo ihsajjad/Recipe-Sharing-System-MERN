@@ -17,11 +17,12 @@ import {
 import { UserDataType } from "../../../backend/src/shared/types";
 import * as apiClient from "../api-client";
 import { app } from "../firebase/firebase.config";
+import { successToast } from "../lib/utils";
 
 // create types for auth context
 export type AuthContextType = {
   user: UserDataType | undefined;
-  signInWithGoogle: () => Promise<UserCredential>;
+  signInWithGoogle: (redirectURL: string) => void;
   setUser: Dispatch<SetStateAction<UserDataType | undefined>>;
   logOut: () => Promise<void>;
 };
@@ -34,11 +35,35 @@ export const AuthContext = createContext<AuthContextType | null>(null);
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<UserDataType | undefined>(undefined);
+  // const navigate = useNavigate();
+
+  const googleProvider = new GoogleAuthProvider();
 
   // sign in with google
-  const googleProvider = new GoogleAuthProvider();
-  const signInWithGoogle = () => {
-    return signInWithPopup(auth, googleProvider);
+  const signInWithGoogle = async (redirectURL?: string) => {
+    await signInWithPopup(auth, googleProvider)
+      .then(async (result: UserCredential) => {
+        const { displayName, email, photoURL } = result.user;
+
+        const userData = {
+          displayName: displayName || "",
+          email: email || "",
+          photoURL: photoURL || "",
+        };
+
+        // will get the token form backend
+        const data = await apiClient.userLogin(userData);
+
+        // storing the token in the localStorage
+        if (data.token) {
+          localStorage.setItem("token", data.token);
+        }
+
+        // redirecting the user to his destination
+        window.location.href = redirectURL || "/";
+        successToast("User login successfull");
+      })
+      .catch(() => {});
   };
 
   // logout user
@@ -46,6 +71,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
     return signOut(auth);
   };
 
+  // observing the current user
   useEffect(() => {
     const observe = onAuthStateChanged(auth, async (user) => {
       if (user) {

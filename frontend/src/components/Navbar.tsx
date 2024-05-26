@@ -1,9 +1,6 @@
-import { FirebaseError } from "firebase/app";
-import { UserCredential } from "firebase/auth";
 import { AlignJustify } from "lucide-react";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
-import * as apiClient from "../api-client";
 import { AuthContext, AuthContextType } from "../providers/AuthProvider";
 import LogOutBtn from "./LogOutBtn";
 
@@ -32,25 +29,7 @@ const Navbar = () => {
   );
 
   const handleSignIn = async () => {
-    await signInWithGoogle()
-      .then(async (result: UserCredential) => {
-        const { displayName, email, photoURL } = result.user || {};
-
-        const userData = {
-          displayName: displayName || "",
-          email: email || "",
-          photoURL: photoURL || "",
-        };
-
-        // will get the token form backend
-        const data = await apiClient.userLogin(userData);
-
-        // storing the token in the localStorage
-        if (data.token) {
-          localStorage.setItem("token", data.token);
-        }
-      })
-      .catch((err: FirebaseError) => console.log(err));
+    signInWithGoogle("/");
   };
 
   return (
