@@ -13,6 +13,7 @@ const AllRecipes = () => {
 
   useEffect(() => {
     const fetchRecipes = async () => {
+      setSearchQuery({ category: "", country: "", searchText: "" });
       const result = await apiClient.getAllRecipes(searchQuery as SearchQuery);
       setRecipes(result.recipes);
     };
