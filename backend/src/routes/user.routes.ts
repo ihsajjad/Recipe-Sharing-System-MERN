@@ -86,4 +86,32 @@ router.post(
   }
 );
 
+router.put(
+  "/increase-coins",
+  verifyToken,
+  async (req: Request, res: Response) => {
+    try {
+      const paidAmount = parseInt(
+        req.body.paidAmount ? req.body.paidAmount : "0"
+      );
+
+      let boughtCoins = 0;
+
+      if (paidAmount === 1) boughtCoins = 100;
+      else if (paidAmount === 5) boughtCoins = 500;
+      else if (paidAmount === 10) boughtCoins = 1000;
+
+      await User.findOneAndUpdate(
+        { email: req.email },
+        { $inc: { coins: boughtCoins } }
+      );
+
+      res.json({ message: "Coins increased successfully" });
+    } catch (error) {
+      console.log(__dirname, error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  }
+);
+
 export default router;

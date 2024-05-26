@@ -6,6 +6,7 @@ import {
 import { Stripe, StripeElements } from "@stripe/stripe-js";
 import { FormEvent, useContext, useState } from "react";
 import { PaymentIntentType } from "../../../backend/src/shared/types";
+import * as apiClient from "../api-client";
 import { AuthContext, AuthContextType } from "../providers/AuthProvider";
 
 const CheckOutForm = ({
@@ -28,6 +29,9 @@ const CheckOutForm = ({
       console.log(error);
       return;
     }
+
+    // increasing the coins in the user data
+    await apiClient.increaseCoins(paymentIntent.amount);
 
     setLoading(true);
 

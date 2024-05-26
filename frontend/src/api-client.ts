@@ -14,6 +14,8 @@ export const stripePromise = loadStripe(
 export const API_BASE_URL =
   import.meta.env.MODE === "production" ? "" : "http://localhost:3000";
 
+const token = localStorage.getItem("token");
+
 // getting current user data
 export const getCurrentUser = async (token: string): Promise<UserDataType> => {
   const response = await fetch(`${API_BASE_URL}/api/users/current-user`, {
@@ -97,6 +99,22 @@ export const createPaymentIntent = async (amount: number, token: string) => {
       body: JSON.stringify({ amount }),
     }
   );
+
+  if (!response.ok) throw new Error("Something went wrong");
+
+  return response.json();
+};
+
+// increase coins
+export const increaseCoins = async (paidAmount: number) => {
+  const response = await fetch(`${API_BASE_URL}/api/users/increase-coins`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: `bearer ${token}`,
+    },
+    body: JSON.stringify({ paidAmount }),
+  });
 
   if (!response.ok) throw new Error("Something went wrong");
 
