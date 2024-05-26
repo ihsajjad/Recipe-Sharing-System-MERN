@@ -5,7 +5,7 @@ import {
   UserDataType,
 } from "../../backend/src/shared/types";
 
-const API_BASE_URL =
+export const API_BASE_URL =
   import.meta.env.MODE === "production" ? "" : "http://localhost:3000";
 
 // getting current user data
@@ -28,6 +28,17 @@ export const userLogin = async (userData: UserDataType) => {
   });
 
   if (!response.ok) return new Error("Something went wrong");
+
+  return response.json();
+};
+
+// fetch single recipe
+export const fetchSingleRecipeById = async (
+  recipeId: string
+): Promise<RecipeDataType> => {
+  const response = await fetch(`${API_BASE_URL}/api/recipes/${recipeId}`);
+
+  if (!response.ok) throw new Error("Something went wrong");
 
   return response.json();
 };

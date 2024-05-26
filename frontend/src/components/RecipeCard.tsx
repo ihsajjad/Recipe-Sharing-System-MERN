@@ -5,7 +5,7 @@ const RecipeCard = ({ recipe }: { recipe: RecipeCardType }) => {
   const navigate = useNavigate();
 
   const handleRedirectToSingleRecipe = (_id: string) => {
-    navigate(`/recipes/${_id}`);
+    navigate(`/all-recipes/${_id}`);
   };
 
   return (
