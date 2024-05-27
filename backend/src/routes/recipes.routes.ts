@@ -146,12 +146,10 @@ async function constructedSearchQuery(queryParams: any) {
 
   if (queryParams.category) {
     constructedQuery.category = queryParams.category;
-    // constructedQuery.$eq = { category: queryParams.category };
   }
 
   if (queryParams.country) {
     constructedQuery.country = queryParams.country;
-    // constructedQuery.$eq = { country: queryParams.country };
   }
 
   return constructedQuery;
