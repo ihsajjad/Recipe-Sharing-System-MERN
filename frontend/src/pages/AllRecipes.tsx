@@ -37,7 +37,7 @@ const AllRecipes = () => {
             <CardSkeleton />
             <CardSkeleton />
           </>
-        ) : recipes ? (
+        ) : recipes.length > 0 ? (
           recipes.map((recipe) => (
             <RecipeCard recipe={recipe} key={recipe._id} />
           ))
