@@ -1,3 +1,51 @@
+export const skills = [
+  "HTML5",
+  "CSS3",
+  "JavaScript (ES6)",
+  "TypeScript",
+  "Next.js",
+  "React.js",
+  "Node.js",
+  "Express.js",
+  "MongoDB",
+  "Tailwind CSS",
+  "Bootstrap",
+  "Mongoose",
+  "Material UI",
+  "Firebase",
+  "PlayWright",
+  "JWT",
+  "Shadcn UI",
+];
+
+export const experiences = [
+  {
+    id: 1,
+    title: "React Developer",
+    company: "Talentship Global Advisory",
+    type: "Internship",
+    duration: "2 Months",
+    range: "Aug 21, 2023 - Oct 21, 2023",
+    description:
+      "This was my first internship after completing my course. I worked on two projects 6Sparks LLC and Unity Yoga Studio. I had become the team leader in the Unity Yoga Studio project.",
+    certificate:
+      "https://drive.google.com/file/d/1thUJXVkUA_gJULGPA8DKP_JXhoiwB2ix/view?usp=sharing",
+  },
+  {
+    id: 2,
+    title: "React Developer",
+    company: "CEHPoint E-Learning & Ceyber Security",
+
+    type: "Internship",
+    duration: "2 Months",
+    range: "Sep 10, 2023 - Nov 10, 2023",
+    description:
+      "I worked on the Thaiseva project. I have built an Admin Dashboard for the Thaiseva Application alone. I built the project with React and Firebase (Including Storage, Firestore, and Authentication).",
+    certificate:
+      "https://drive.google.com/file/d/18X-sKuKU07GlX-zgsHsaJvCMH4kGbVy8/view?usp=sharing",
+  },
+];
+
 export const cardsData = [
   {
     id: 1,
