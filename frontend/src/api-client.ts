@@ -1,4 +1,5 @@
 import { loadStripe } from "@stripe/stripe-js";
+import axios from "axios";
 import {
   RecipeCardType,
   RecipeDataType,
@@ -12,62 +13,44 @@ export const stripePromise = loadStripe(
 );
 
 export const API_BASE_URL =
-  import.meta.env.MODE === "production" ? "" : "http://localhost:3000";
+  import.meta.env.MODE === "production"
+    ? ""
+    : "https://recipe-sharing-9on8.onrender.com";
 
 export const token = localStorage.getItem("token");
 
-// getting current user data
-export const getCurrentUser = async (token: string): Promise<UserDataType> => {
-  const response = await fetch(`${API_BASE_URL}/api/users/current-user`, {
-    headers: {
-      authorization: `Bearer ${token}`,
-    },
-  });
+const instance = axios.create({
+  baseURL: API_BASE_URL,
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
+  },
+});
 
-  return response.json();
+// getting current user data
+export const getCurrentUser = async (): Promise<UserDataType> => {
+  const response = await instance.get("/api/users/current-user");
+  return response.data;
 };
 
 //   user login
 export const userLogin = async (userData: UserDataType) => {
-  const response = await fetch(`${API_BASE_URL}/api/users`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(userData),
-  });
-
-  if (!response.ok) return new Error("Something went wrong");
-
-  return response.json();
+  const response = await instance.post("/api/users", JSON.stringify(userData));
+  return response.data;
 };
 
 // fetch single recipe
 export const fetchSingleRecipeById = async (
   recipeId: string
 ): Promise<RecipeDataType> => {
-  const response = await fetch(`${API_BASE_URL}/api/recipes/${recipeId}`);
-
-  if (!response.ok) throw new Error("Something went wrong");
-
-  return response.json();
+  const response = await instance.get(`/api/recipes/${recipeId}`);
+  return response.data;
 };
 
 // create new recipe
-export const createNewRecipe = async (
-  recipeData: RecipeDataType,
-  token: string
-) => {
-  const response = await fetch(`${API_BASE_URL}/api/recipes`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify(recipeData),
-  });
-
-  if (!response.ok) throw new Error("Something went wrong");
-
-  return response.json();
+export const createNewRecipe = async (recipeData: RecipeDataType) => {
+  const response = await instance.post("/api/recipes", recipeData);
+  return response.data;
 };
 
 // get all recipes
@@ -79,76 +62,37 @@ export const getAllRecipes = async (
   params.append("country", queryParams.country);
   params.append("category", queryParams.category);
 
-  const response = await fetch(`${API_BASE_URL}/api/recipes?${params}`);
-
-  if (!response.ok) throw new Error("Something went wrong!");
-
-  return response.json();
+  const response = await instance.get(`/api/recipes?${params}`);
+  return response.data;
 };
 
 // create payment intent
-export const createPaymentIntent = async (amount: number, token: string) => {
-  const response = await fetch(
-    `${API_BASE_URL}/api/users/create-payment-intent`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        authorization: `bearer ${token}`,
-      },
-      body: JSON.stringify({ amount }),
-    }
-  );
-
-  if (!response.ok) throw new Error("Something went wrong");
-
-  return response.json();
+export const createPaymentIntent = async (amount: number) => {
+  const response = await instance.post("/api/users/create-payment-intent", {
+    amount,
+  });
+  return response.data;
 };
 
 // increase coins
 export const increaseCoins = async (paidAmount: number) => {
-  const response = await fetch(`${API_BASE_URL}/api/users/increase-coins`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      authorization: `bearer ${token}`,
-    },
-    body: JSON.stringify({ paidAmount }),
+  const response = await instance.put("/api/users/increase-coins", {
+    paidAmount,
   });
-
-  if (!response.ok) throw new Error("Something went wrong");
-
-  return response.json();
+  return response.data;
 };
 
 // buy recipe
 export const buyRecipe = async (recipeId: string, creatorEmail: string) => {
-  const response = await fetch(`${API_BASE_URL}/api/recipes/buy-recipe`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      authorization: `bearer ${token}`,
-    },
-    body: JSON.stringify({ recipeId, creatorEmail }),
+  const response = await instance.put("/api/recipes/buy-recipe", {
+    recipeId,
+    creatorEmail,
   });
-
-  if (!response.ok) throw new Error("Something went wrong");
-
-  return response.ok;
+  return response.status;
 };
 
 // update reaction
 export const updateReactions = async (recipeId: string) => {
-  const response = await fetch(`${API_BASE_URL}/api/recipes/reaction`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      authorization: `bearer ${token}`,
-    },
-    body: JSON.stringify({ recipeId }),
-  });
-
-  if (!response.ok) throw new Error("Something went wrong");
-
-  return response.ok;
+  const response = await instance.put("/api/recipes/reaction", { recipeId });
+  return response.status;
 };

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { RecipeCardType, SearchQuery } from "../../../backend/src/shared/types";
 import * as apiClient from "../api-client";
 import CardSkeleton from "../components/CardSkeleton";
+import Counter from "../components/Counter";
 import RecipeCard from "../components/RecipeCard";
 import SearchQueries from "../components/SearchQueries";
 
@@ -29,7 +30,7 @@ const AllRecipes = () => {
     <div className="max-container py-6">
       <h1 className="page-title">All Recipes</h1>
       <SearchQueries setSearchQuery={setSearchQuery} />
-
+      <Counter />
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-8 mb-16 justify-items-center sm:justify-items-stretch">
         {loading ? (
           <>

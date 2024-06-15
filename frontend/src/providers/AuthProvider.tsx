@@ -64,7 +64,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
 
         // redirecting the user to his destination
-        window.location.href = redirectURL || "/";
+        // window.location.href = redirectURL || "/";
         successToast("User login successfull");
       })
       .catch(() => {});
