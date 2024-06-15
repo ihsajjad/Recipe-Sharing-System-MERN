@@ -6,13 +6,8 @@ const BuyCoins = () => {
   const navigate = useNavigate();
 
   const handleBuyCoins = async (amount: number) => {
-    const token = localStorage.getItem("token");
-
     // creating a stripe payment intent in the DB it will return client secret
-    const paymentIntent = await apiClient.createPaymentIntent(
-      amount,
-      token as string
-    );
+    const paymentIntent = await apiClient.createPaymentIntent(amount);
 
     if (paymentIntent) {
       navigate("/confirm-payment", { state: paymentIntent });

@@ -40,7 +40,7 @@ const AddRecipes = () => {
     }
 
     if (apiClient.token) {
-      const result = await apiClient.createNewRecipe(data, apiClient.token);
+      const result = await apiClient.createNewRecipe(data);
       if (result) {
         successToast("Recipe is added successfully");
         reset();

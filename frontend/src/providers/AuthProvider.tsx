@@ -64,7 +64,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
 
         // redirecting the user to his destination
-        // window.location.href = redirectURL || "/";
+        window.location.href = redirectURL || "/";
         successToast("User login successfull");
       })
       .catch(() => {});
@@ -83,7 +83,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
         const token = localStorage.getItem("token");
         if (token) {
           // getting the user's data form the database
-          const userData = await apiClient.getCurrentUser(token);
+          const userData = await apiClient.getCurrentUser();
           setUser(userData);
           setLoading(false);
         }
