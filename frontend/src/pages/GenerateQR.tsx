@@ -1,7 +1,10 @@
-import { ChangeEvent } from "react";
-import { uploadFile } from "../lib/utils";
+import { ChangeEvent, useState } from "react";
+import QRCode from "react-qr-code";
+import { loadFile, uploadFile } from "../lib/utils";
 
 const GenerateQR = () => {
+  const [url, setUrl] = useState<string>("");
+
   const handleUploadImage = async (e: ChangeEvent<HTMLInputElement>) => {
     const { files } = e.target;
     if (files && files[0]) {
@@ -15,7 +18,10 @@ const GenerateQR = () => {
       const result = await uploadFile(file, filePath);
       console.log(result, filePath);
 
-      // const downloadURL = await loadFile(filePath);
+      const downloadURL = await loadFile(filePath);
+      if (downloadURL) {
+        return setUrl(`http://localhost:5173/${fileType}_${file.lastModified}`);
+      }
 
       console.log(result);
       // if (result?.error) {
@@ -31,7 +37,7 @@ const GenerateQR = () => {
   const onSubmit = () => {};
 
   return (
-    <div className="h-screen w-screen flex items-center justify-center">
+    <div className="h-screen w-screen flex items-center justify-center gap-5">
       <form
         onSubmit={onSubmit}
         className="border border-purple-500 p-5 rounded-md"
@@ -62,6 +68,15 @@ const GenerateQR = () => {
           />
         </div>
       </form>
+
+      {url && (
+        <QRCode
+          size={256}
+          style={{ height: "auto", maxWidth: "100%", width: "200px" }}
+          value={url}
+          viewBox={`0 0 256 256`}
+        />
+      )}
     </div>
   );
 };
